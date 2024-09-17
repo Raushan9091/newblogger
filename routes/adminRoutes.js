@@ -13,8 +13,20 @@ const path = require('path');
 
 admin_routes.use(express.static('public'));
 
+admin_routes.use(express.static('public'));
+
+const session = require('express-session');
+const SessionSecretKey = process.env.SESSION_SECRET_KEY;
+admin_routes.use(session({
+    secret: SessionSecretKey,
+    resave: true,
+    saveUninitialized: true,
+    // cookie: {secure:true},
+}));
+
 
 const storage = multer.diskStorage({ 
+
     destination: function (req, file, cb) { 
         const uploadPath = path.join(__dirname, '../public/images'); 
         console.log('Resolved upload path', uploadPath); 
@@ -30,12 +42,13 @@ const upload = multer({ storage: storage });
 
 
 const adminController = require('../controller/adminController');
-
-// admin_routes.get('/login',adminController.login);
+const adminLoginAuth = require('../middleware/adminLoginAuth');
 
 admin_routes.get('/blog-setup',adminController.blogSetup);
 
-admin_routes.post('/blog-setup',upload.single('blog_image'),adminController.blogSetupSave)
+admin_routes.post('/blog-setup',upload.single('blog_image'),adminController.blogSetupSave);
+
+admin_routes.get('/dashboard',adminLoginAuth.isLogin, adminController.dashboard);
 
 module.exports = admin_routes; 
 
