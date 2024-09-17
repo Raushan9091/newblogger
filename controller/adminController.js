@@ -2,16 +2,14 @@ const BlogSetting = require('../model/blogModel');
 const User = require('../model/userModel');
 const bcrypt = require('bcrypt');
 
-// const login = async(req,res)=>{
-//     res.send('Login me hai');
-// }
-
 
 const securepassword = async(password)=>{
     try{
         const hashedPassword = await bcrypt.hash(password, 10);
+        return hashedPassword;
     }catch(error){
-        console.log(error.message);
+        console.error('Error hashing  password:',error.message);
+        throw new Error('password hashing failed');
     }
 }
 
@@ -19,16 +17,28 @@ const blogSetup = async(req,res)=>{
     try{
 
         const blog = await BlogSetting.find({});
-        if(blog.length>0){
+        if(blog.length > 0 ){
             res.redirect('/login');
         }
         else{
-            res.render('blogSetup.ejs');
+            res.render('blogSetup');
         }
         
     }catch(error){
-        console.log(error.message);
+        console.error('Error fetching blogs:', error.message);
+        res.status(500).send('Internal Server Error');
+        
     } 
+}
+
+
+const dashboard = async(req, res)=>{
+    try{
+        res.render('admin/dashboard');
+    }catch(error){
+        console.log(error.message);
+
+    }
 }
 
 const blogSetupSave = async(req,res)=>{
@@ -76,5 +86,5 @@ const blogSetupSave = async(req,res)=>{
 module.exports ={
     blogSetupSave,
    blogSetup,
-//    login
+   dashboard
 }
