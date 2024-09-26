@@ -1,21 +1,17 @@
 const mongoose = require('mongoose');
 
 const blogModel = new mongoose.Schema({
-    name: {
+    blog_title:{
         type: String,
         required: true
     },
-    email: {
+    blog_description:{
         type: String,
         required: true
     },
-    password:{
-        type:String,
-        require: true,
-    },
-    is_admin:{
+    blog_image:{
         type: String,
-        require: true
+        required: true
     }
 });
 

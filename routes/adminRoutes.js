@@ -1,54 +1,57 @@
 const express = require('express');
-const admin_routes = express();
+const admin_router = express();
 
 const bodyParser = require('body-parser');
-admin_routes.use(bodyParser.json());
-admin_routes.use(bodyParser.urlencoded({extended: true}));
+admin_router.use(bodyParser.json());
+admin_router.use(bodyParser.urlencoded({extended: true}));
 
-admin_routes.set('view engine', 'ejs');
-admin_routes.set('views','./views');
+admin_router.set('view engine', 'ejs');
+admin_router.set('views','./views');
 
 const multer = require('multer');
-const path = require('path');
+const path = require("path");
+admin_router.use(express.static('public'));
 
-admin_routes.use(express.static('public'));
-
-admin_routes.use(express.static('public'));
+admin_router.use(express.static('public'));
 
 const session = require('express-session');
-const SessionSecretKey = process.env.SESSION_SECRET_KEY;
-admin_routes.use(session({
-    secret: SessionSecretKey,
+const sessionSecretKey = process.env.SESSION_SECRET_KEY;
+admin_router.use(session({
+    secret: sessionSecretKey,
     resave: true,
     saveUninitialized: true,
-    // cookie: {secure:true},
-}));
+    // cookie: { secure: true }
+  }));
 
+const storage = multer.diskStorage({
+  
+    destination: function (req, file, cb) {
 
-const storage = multer.diskStorage({ 
+      const uploadPath = path.join(__dirname, '../public/images');
+      console.log('Resolved upload path',uploadPath);
+      cb(null, uploadPath);
+    },
+    filename: function (req, file, cb) {
+      const name = Date.now() + '-' + file.originalname;
+      cb(null, name);
+    }
+  });
+  
+  const upload = multer({ storage: storage });
 
-    destination: function (req, file, cb) { 
-        const uploadPath = path.join(__dirname, '../public/images'); 
-        console.log('Resolved upload path', uploadPath); 
-        cb(null, uploadPath); 
-    }, 
-    filename: function (req, file, cb) { 
-        const name = Date.now() + '-' + file.originalname; 
-        cb(null, name); 
-    } 
-})
+const adminController = require("../controller/adminController");
 
-const upload = multer({ storage: storage });
-
-
-const adminController = require('../controller/adminController');
 const adminLoginAuth = require('../middleware/adminLoginAuth');
 
-admin_routes.get('/blog-setup',adminController.blogSetup);
 
-admin_routes.post('/blog-setup',upload.single('blog_image'),adminController.blogSetupSave);
+admin_router.get('/blog-setup',adminController.blogSetup);
 
-admin_routes.get('/dashboard',adminLoginAuth.isLogin, adminController.dashboard);
+admin_router.post('/blog-setup',upload.single('blog_image'),adminController.blogSetupSave);
 
-module.exports = admin_routes; 
+admin_router.get('/dashboard',adminLoginAuth.isLogin,adminController.dashboard);
 
+admin_router.get('/create-post',adminLoginAuth.isLogin,adminController.loadpostdashboard);
+
+admin_router.post('/create-post',adminLoginAuth.isLogin,adminController.addPost);
+
+module.exports = admin_router;

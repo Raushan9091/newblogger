@@ -3,7 +3,8 @@ const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
 const adminRouter = require('./routes/adminRoutes');
-// const userRouter = require('./routes/userRouter')
+const userRouter = require('./routes/userRouter');
+const bolgRoutes = require('./routes/blogRoutes');
 
 const isblogExit = require('./middleware/blogExit');
 
@@ -24,8 +25,8 @@ db.once('open', () => {
 
 app.use(isblogExit.isblogExittorNot);
 app.use('/', adminRouter);
-// app.use('/', userRouter);
-
+app.use('/', userRouter);
+app.use('/',bolgRoutes);
 
 app.get('/', (req, res) => {
     res.send("I Love coding and creating application & websites");

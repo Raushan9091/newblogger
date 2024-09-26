@@ -1,5 +1,6 @@
 const BlogSetting = require('../model/blogModel');
 const User = require('../model/userModel');
+const Post = require('../model/postModel');
 const bcrypt = require('bcrypt');
 
 
@@ -41,6 +42,33 @@ const dashboard = async(req, res)=>{
     }
 }
 
+const loadpostdashboard = async(req, res)=>{
+    try{
+        res.render('admin/postDashboard');
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+
+const addPost = async(req, res)=>{
+    try {    
+
+        const newPost = new Post({
+            title: req.body.title,
+            content : req.body.content
+        
+        });
+        
+        const postData = await newPost.save();
+
+        res.render('admin/postDashboard', {message: 'Post added Successfully'});
+
+    } catch (error) {
+        console.log(error.message); 
+    }
+}
+
 const blogSetupSave = async(req,res)=>{
     try{
         console.log('File Info:', req.file);
@@ -55,12 +83,12 @@ const blogSetupSave = async(req,res)=>{
 
         const  newBlog = new BlogSetting({
             blog_title:blog_title,
-            blog_logo:blog_image,
+            blog_image:blog_image,
             blog_description:description
         });
         
         const savedBlog = await newBlog.save();
-        console.log('Blog:', savedBlog);
+        console.log('Blog:',savedBlog);
 
         const newUser = new User({
             name:name,
@@ -86,5 +114,7 @@ const blogSetupSave = async(req,res)=>{
 module.exports ={
     blogSetupSave,
    blogSetup,
-   dashboard
+   dashboard,
+   loadpostdashboard,
+   addPost
 }

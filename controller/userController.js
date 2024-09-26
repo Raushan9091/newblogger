@@ -20,6 +20,16 @@ const profile = async(req, res)=>{
     }
 }
 
+const logout = async(req,res)=>{
+    try{
+        req.session.destroy();
+        res.redirect('/login');
+    }catch(error){
+        console.log(error.message);
+    }
+    
+}
+
 const verifyLogin = async(req, res)=>{
     try{
         console.log(req.body.email);
@@ -30,7 +40,7 @@ const verifyLogin = async(req, res)=>{
 
         if(UserData){
             console.log(UserData);
-            const passwordMatch = bcrypt.compare(password, UserData.password);
+            const passwordMatch = await bcrypt.compare(password, UserData.password);
             req.session.User_id = UserData._id;
             req.session.is_admin = UserData.is_admin;
             if(passwordMatch){
@@ -57,5 +67,6 @@ const verifyLogin = async(req, res)=>{
 module.exports ={
     logingloader,
     verifyLogin,
-    profile
+    profile,
+    logout
 }
