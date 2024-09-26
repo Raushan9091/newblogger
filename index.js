@@ -26,7 +26,7 @@ db.once('open', () => {
 app.use(isblogExit.isblogExittorNot);
 app.use('/', adminRouter);
 app.use('/', userRouter);
-app.use('/',bolgRoutes);
+app.use('/', bolgRoutes);
 
 app.get('/', (req, res) => {
     res.send("I Love coding and creating application & websites");
