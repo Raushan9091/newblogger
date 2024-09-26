@@ -1,48 +1,56 @@
 <%- include('./layout/header.ejs') %> 
- <div class="container">
+
+<div class="container">
   <h1>Blog Setup</h1>
-  <form action=""method="Post" enctype="multipart/form-data">
+  <form action="" method="post" enctype="multipart/form-data">
     <div class="row">
-      <div class="col-sm-20">
-        <input type="text" name="blog_title" placeholder="Enter blog title" required>
+      <div class="col-sm-12">
+        <label for="blog_title">Blog Title:</label>
+        <input type="text" id="blog_title" name="blog_title" placeholder="Enter blog title" required>
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-sm-20">
-        <input type="file" name="blog_image" placeholder="choose file">
+      <div class="col-sm-12">
+        <label for="blog_image">Blog Image:</label>
+        <input type="file" id="blog_image" name="blog_image">
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-sm-20">
-        <textarea type="description" name="description" placeholder="Enter description " required></textarea>
+      <div class="col-sm-12">
+        <!-- <label for="description">Description:</label>
+        <textarea id="description" name="description" placeholder="Enter description" rows="4" required></textarea> -->
+        <label for="description">Description</label>
+        <textarea name="description" id="description" placeholder="Enter description" rows="required"></textarea>
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-sm-20">
-        <input type="name" name="name" placeholder="Enter Admin Name" required>
+      <div class="col-sm-12">
+        <label for="name">Admin Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter Admin Name" required>
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-sm-20">
-        <input type="email" name="email" placeholder="Enter emai_id" required>
+      <div class="col-sm-12">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Enter email" required>
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-sm-20">
-        <input type="password" name="password" placeholder="Enter your password" required>
+      <div class="col-sm-12">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
       </div>
     </div>
     <div class="row mt-3">
-      <div class="col-sm-20">
+      <div class="col-sm-12">
         <input type="submit" class="btn btn-primary" value="Blog Setup">
       </div>
     </div>
   </form>
- </div>
+</div>
 
- <% if (typeof message !== 'undefined') { %>
+<% if (typeof message !== 'undefined') { %>
   <p style="color: red;"><%- message %></p>
 <% } %>
 
-
-<%- include('./layout/footer.ejs') %> 
+<%- include('./layout/footer.ejs') %>
