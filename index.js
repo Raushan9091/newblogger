@@ -8,8 +8,14 @@ const bolgRoutes = require('./routes/blogRoutes');
 
 const isblogExit = require('./middleware/blogExit');
 
+let http = require('http').createServer(app);
+
+let {Server} = require('socket.io');
+
+let io = new Server (http,{});
+
 const database_url = process.env.DATABASE_URL;
-const PORTNO = process.env.PORT; 
+
 const dbName = 'newblogger';
 
 mongoose.connect(database_url, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -24,14 +30,31 @@ db.once('open', () => {
 
 
 app.use(isblogExit.isblogExittorNot);
+
 app.use('/', adminRouter);
+
 app.use('/', userRouter);
+
 app.use('/', bolgRoutes);
 
 app.get('/', (req, res) => {
     res.send("I Love coding and creating application & websites");
 });
 
-app.listen(PORTNO, () => {
+const PORTNO = process.env.PORT; 
+
+io.on("connection", function(socket){
+    console.log("User connection");
+    socket.on("new_post", function(formData){
+        console.log(formData);
+        socket.broadcast.emit("new_post", formData);
+    })
+})
+
+// app.listen(PORTNO, () => {
+//     console.log(`Server started on port ${PORTNO}`);
+// });
+
+http.listen(PORTNO, () => {
     console.log(`Server started on port ${PORTNO}`);
 });
