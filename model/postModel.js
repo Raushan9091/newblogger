@@ -1,3 +1,4 @@
+const { type } = require('express/lib/response');
 const mongoose = require('mongoose');
 
 const postSchema  = new mongoose.Schema({
@@ -9,6 +10,14 @@ const postSchema  = new mongoose.Schema({
     content:{
         type: String,
         required: true
+    },
+    comments:{
+        type: Object,
+        default:{}
+    },
+    image:{
+        type: String,
+        default:''
     }
 
 });

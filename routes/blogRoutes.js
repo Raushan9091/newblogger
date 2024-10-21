@@ -12,4 +12,8 @@ bolg_routs.get('/', blogController.loadBlogs);
 
 bolg_routs.get('/post/:id',blogController.loadPost)
 
+bolg_routs.post('/add-comment', blogController.addComment);
+
+bolg_routs.post('/do-reply', blogController.doReply);
+
 module.exports = bolg_routs;
